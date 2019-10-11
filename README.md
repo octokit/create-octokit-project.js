@@ -126,7 +126,7 @@ Edit `package.json`
 - add `"publishConfig": { "access": "public"},`
 - remove `"main"`
 - replace `"repository"` with simple string: `"https://github.com/octokit/action.js"`
-- Add keywords `["github", "api", "sdk", "toolkit", "github-action"]`
+- Add keywords `["github", "api", "sdk", "toolkit"]`
 - Add description: `GitHub API client for GitHub Actions`
 - Remove `"bugs"` and `"homepage"`
 - Replace `"scripts"` with
@@ -201,16 +201,20 @@ Add repository collaborators
 
 Install Pika CI app on new repo
 
-- https://github.com/organizations/octokit/settings/installations/1302828
+- https://github.com/apps/pika-cd
 
 Install Greenkeeper
 
-- https://github.com/organizations/octokit/settings/installations/56098
+- https://github.com/apps/greenkeeper
 
 Setup branch protection for `master` branch
 
 - [x] Require pull request reviews before merging
 - [x] Require status checks to pass before merging: WIP, Pika CI, test
+
+Create an npm token and store it as a secret in the repository
+
+- https://www.npmjs.com/settings/[YOUR NPM USERNAME]/tokens/create (with "Read and Publish" selected)
 
 Continue
 
