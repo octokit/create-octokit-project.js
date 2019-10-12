@@ -3,7 +3,9 @@
   "version": "0.0.0-development",
   "description": "`npm init` script to create a new Octokit JS module",
   "main": "create-octokit-project.js",
-  "bin": "create-octokit-project.js",
+  "bin": {
+    "create-octokit-project": "create-octokit-project.js"
+  },
   "repository": "https://github.com/octokit/create-octokit-project.js",
   "keywords": [
     "npm-init"
@@ -18,7 +20,6 @@
   "dependencies": {
     "@octokit/auth-basic": "^1.0.3",
     "@octokit/core": "^1.3.0",
-    "conduct": "^2.3.0",
     "execa": "^2.1.0",
     "inquirer": "^7.0.0",
     "spdx-license-list": "^6.1.0"
