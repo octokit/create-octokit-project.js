@@ -113,7 +113,11 @@ async function main() {
       base: "master",
       title: "🚧 Initial version",
       body: `- [ ] Implement features. Create separate \`feat: ...\` commits for each feature of the initial version
-- [ ] 100% test coverage`
+- [ ] 100% test coverage
+- [ ] Install https://github.com/apps/greenkeeper
+- [ ] Install https://github.com/apps/pika-ci
+- [ ] Create npm token at \`https://www.npmjs.com/settings/<your npm username>/tokens/create\` (with "Read and Publish" selected) and add it as \`NPM_SECRET\` at Then create secret at https://github.com/${answers.repository}/secrets
+`
     });
 
     await createPackageJson(answers);
@@ -204,16 +208,6 @@ describe("Smoke test", () => {
 
     console.log(`Your new repository is here:
 https://github.com/${answers.repository}
-    
-Install the following apps on the new ${answers.repository} repository
-    
-- https://github.com/apps/greenkeeper
-- https://github.com/apps/pika-ci
-
-Create an npm token and store it as a secret in the repository
-
-- Create at: https://www.npmjs.com/settings/<your npm username>/tokens/create (with "Read and Publish" selected)
-- Then create secret at https://github.com/${answers.repository}/secrets with the name "NPM_TOKEN"
 
 To change into the new directory, do 
 $ cd ${answers.path}`);
