@@ -1,0 +1,28 @@
+{
+  "name": "create-octokit-project.js",
+  "version": "1.0.0",
+  "description": "`npm init` script to create a new Octokit JS module",
+  "main": "create-octokit-project.js",
+  "repository": "https://github.com/octokit/create-octokit-project.js",
+  "keywords": [
+    "npm-init"
+  ],
+  "author": "Gregor Martynus (https://twitter.com/gr2m)",
+  "license": "MIT",
+  "scripts": {
+    "lint": "prettier --check '{src,test}/**/*.{ts,md}' README.md package.json",
+    "lint:fix": "prettier --write '{src,test}/**/*.{ts,md}' README.md package.json",
+    "test": "npm run lint"
+  },
+  "dependencies": {
+    "@octokit/auth-basic": "^1.0.3",
+    "@octokit/core": "^1.3.0",
+    "conduct": "^2.3.0",
+    "execa": "^2.1.0",
+    "inquirer": "^7.0.0",
+    "spdx-license-list": "^6.1.0"
+  },
+  "devDependencies": {
+    "prettier": "^1.18.2"
+  }
+}
