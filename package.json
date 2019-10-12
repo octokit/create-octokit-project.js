@@ -1,6 +1,6 @@
 {
-  "name": "create-octokit-project.js",
-  "version": "1.0.0",
+  "name": "create-octokit-project",
+  "version": "0.0.0-development",
   "description": "`npm init` script to create a new Octokit JS module",
   "main": "create-octokit-project.js",
   "repository": "https://github.com/octokit/create-octokit-project.js",
@@ -23,6 +23,7 @@
     "spdx-license-list": "^6.1.0"
   },
   "devDependencies": {
-    "prettier": "^1.18.2"
+    "prettier": "^1.18.2",
+    "semantic-release": "^15.13.24"
   }
 }
