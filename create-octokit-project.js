@@ -117,13 +117,13 @@ async function main() {
     });
 
     await createPackageJson(answers);
-    await command(`git add package.json`);
-    await command(`git commit -m 'build(package): initial version'`);
-
     console.log("Install dependencies");
     await command(
       "npm install --save-dev @pika/pack @pika/plugin-build-node @pika/plugin-build-web @pika/plugin-ts-standard-pkg @types/jest @types/node jest prettier semantic-release semantic-release-plugin-update-version-in-files ts-jest typescript"
     );
+
+    await command(`git add package.json`);
+    await command(`git commit -m 'build(package): initial version'`);
     await command(`git add package-lock.json`);
     await command(`git commit -m 'build(package): lock file'`);
 
@@ -174,7 +174,8 @@ describe("Smoke test", () => {
   it("is a function", () => {
     expect(${answers.exportName}).toBeInstanceOf(Function);
   });
-});`
+});
+`
     );
 
     await command(`git add test`);
