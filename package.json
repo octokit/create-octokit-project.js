@@ -3,6 +3,7 @@
   "version": "0.0.0-development",
   "description": "`npm init` script to create a new Octokit JS module",
   "main": "create-octokit-project.js",
+  "bin": "create-octokit-project.js",
   "repository": "https://github.com/octokit/create-octokit-project.js",
   "keywords": [
     "npm-init"
