@@ -185,6 +185,54 @@ describe("Smoke test", () => {
     await command(`git add test`);
     await command(`git commit -m 'test: initial version'`);
 
+    console.log("create src");
+    await mkdir("src");
+    await writeFile(
+      "src/version.ts",
+      'export const VERSION = "0.0.0-development";\n'
+    );
+
+    if (answers.isPlugin) {
+      await writeFile(
+        "src/index.ts",
+        `import { VERSION } from "./version";
+
+type Octokit = any;
+type Options = {
+  [option: string]: any;
+};
+
+/**
+ * @param octokit Octokit instance
+ * @param options Options passed to Octokit constructor
+ */
+export function ${answers.exportName}(octokit: Octokit, options: Options) {}
+${answers.exportName}.VERSION = VERSION;
+`
+      );
+    } else {
+      const isClass = /^[A-Z]/.test(answers.exportName);
+
+      if (isClass) {
+        await writeFile(
+          "src/index.ts",
+          `import { VERSION } from './version'
+
+export class ${answers.exportName} {
+  static VERSION = VERSION
+}`
+        );
+      } else {
+        await writeFile(
+          "src/index.ts",
+          `import { VERSION } from './version'
+
+export function ${answers.exportName}() {}
+${answers.exportName}.VERSION = VERSION`
+        );
+      }
+    }
+
     await createReadme({
       addBadges: true,
       repo,
