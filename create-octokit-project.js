@@ -9,6 +9,7 @@ const authenticate = require("./lib/authenticate");
 const command = require("./lib/command");
 const createBranchProtection = require("./lib/create-branch-protection");
 const createCoc = require("./lib/create-coc");
+const createContributing = require("./lib/create-contributing");
 const createLicense = require("./lib/create-license");
 const createPackageJson = require("./lib/create-package-json");
 const createPullRequest = require("./lib/create-pull-request");
@@ -62,6 +63,15 @@ async function main() {
 
     await command("git init");
 
+    createLicense(answers.licenseName);
+    console.log(`LICENSE created`);
+
+    createCoc(answers.cocEmail);
+    console.log(`CODE_OF_CONDUCT.md created`);
+
+    createContributing();
+    console.log(`CONTRIBUTING.md created`);
+
     await createReadme({
       addWip: true,
       repo,
@@ -69,22 +79,19 @@ async function main() {
     });
     console.log(`README.md created`);
 
-    createLicense(answers.licenseName);
-    console.log(`LICENSE created`);
-
-    createCoc(answers.cocEmail);
-    console.log(`CODE_OF_CONDUCT.md created`);
-
     await command("git add LICENSE");
     await command("git commit -m 'docs(LICENSE): MIT'");
-
-    await command("git add README.md");
-    await command("git commit -m 'docs(README): initial version'");
 
     await command("git add CODE_OF_CONDUCT.md");
     await command(
       "git commit -m 'docs(CODE_OF_CONDUCT): Contributor Covenant'"
     );
+
+    await command("git add CONTRIBUTING.md");
+    await command("git commit -m 'docs(CONTRIBUTING): initial version'");
+
+    await command("git add README.md");
+    await command("git commit -m 'docs(README): initial version'");
 
     await createRepository(octokit, {
       isUserRepo,
