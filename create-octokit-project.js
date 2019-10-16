@@ -88,6 +88,7 @@ async function main() {
 
     await createRepository(octokit, {
       isUserRepo,
+      owner,
       repo,
       description: answers.description
     });
@@ -122,9 +123,29 @@ async function main() {
 
     await createPackageJson(answers);
     console.log("Install dependencies");
-    await command(
-      "npm install --save-dev @pika/pack @pika/plugin-build-node @pika/plugin-build-web @pika/plugin-ts-standard-pkg @types/jest @types/node jest prettier semantic-release semantic-release-plugin-update-version-in-files ts-jest typescript"
-    );
+    const dependencies = [
+      "@pika/pack",
+      "@pika/plugin-ts-standard-pkg",
+      "@types/jest",
+      "@types/node",
+      "jest",
+      "prettier",
+      "semantic-release",
+      "semantic-release-plugin-update-version-in-files",
+      "ts-jest",
+      "typescript"
+    ];
+
+    if (answers.supportsBrowsers) {
+      dependencies.push("@pika/plugin-build-web");
+    }
+    if (answers.supportsNode) {
+      dependencies.push("@pika/plugin-build-node");
+    }
+    if (answers.isPlugin) {
+      dependencies.push("@octokit/core");
+    }
+    await command(`npm install --save-dev ${dependencies.join(" ")}`);
 
     await command(`git add package.json`);
     await command(`git commit -m 'build(package): initial version'`);
@@ -133,7 +154,7 @@ async function main() {
 
     if (!isUserRepo) {
       console.log("Inviting collaborators...");
-      await inviteCollaborators(octokit, { isUserRepo });
+      await inviteCollaborators(octokit, { owner, repo });
     }
 
     console.log("Create branch protection for master");
@@ -170,6 +191,33 @@ async function main() {
 
     console.log("create smoke test");
     await mkdir("test");
+
+    if (answers.isPlugin) {
+      await writeFile(
+        "test/smoke.test.ts",
+        `import { Octokit } from "@octokit/core";
+        
+import { ${answers.exportName} } from "../src";
+  
+  describe("Smoke test", () => {
+    it("{ ${answers.exportName} } export is a function", () => {
+      expect(${answers.exportName}).toBeInstanceOf(Function);
+    });
+  
+    it("${answers.exportName}.VERSION is set", () => {
+      expect(${answers.exportName}.VERSION).toEqual("0.0.0-development");
+    });
+  
+    it("Loads plugin", () => {
+      expect(() => {
+        const TestOctokit = Octokit.plugin(${answers.exportName})
+        new TestOctokit();
+      }).not.toThrow();
+    });
+  });
+  `
+      );
+    }
     await writeFile(
       "test/smoke.test.ts",
       `import { ${answers.exportName} } from "../src";
@@ -177,6 +225,10 @@ async function main() {
 describe("Smoke test", () => {
   it("is a function", () => {
     expect(${answers.exportName}).toBeInstanceOf(Function);
+  });
+
+  it("${answers.exportName}.VERSION is set", () => {
+    expect(${answers.exportName}.VERSION).toEqual("0.0.0-development");
   });
 });
 `
@@ -233,6 +285,9 @@ ${answers.exportName}.VERSION = VERSION`
       }
     }
 
+    await command(`git add src`);
+    await command(`git commit -m 'feat: initial version'`);
+
     await createReadme({
       addBadges: true,
       repo,
@@ -241,6 +296,21 @@ ${answers.exportName}.VERSION = VERSION`
       repository: answers.repository
     });
     await command(`git commit README.md -m 'docs(README): badges'`);
+
+    await createReadme({
+      addBadges: true,
+      addUsage: true,
+      repo,
+      description: answers.description,
+      packageName: answers.packageName,
+      repository: answers.repository,
+      isPlugin: answers.isPlugin,
+      exportName: answers.exportName,
+      supportsBrowsers: answers.supportsBrowsers,
+      supportsNode: answers.supportsNode,
+      usageExample: answers.usageExample
+    });
+    await command(`git commit README.md -m 'docs(README): usage'`);
 
     console.log("Create actions");
     await mkdir(".github/workflows", { recursive: true });
