@@ -70,7 +70,7 @@ async function main() {
     createCoc(answers.cocEmail);
     console.log(`CODE_OF_CONDUCT.md created`);
 
-    createContributing();
+    createContributing({ owner, repo, packageName: answers.packageName });
     console.log(`CONTRIBUTING.md created`);
 
     await createReadme({
