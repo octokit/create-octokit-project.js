@@ -10,6 +10,7 @@ const command = require("./lib/command");
 const createBranchProtection = require("./lib/create-branch-protection");
 const createCoc = require("./lib/create-coc");
 const createContributing = require("./lib/create-contributing");
+const createIssueTemplates = require("./lib/create-issue-templates");
 const createLicense = require("./lib/create-license");
 const createPackageJson = require("./lib/create-package-json");
 const createPullRequest = require("./lib/create-pull-request");
@@ -74,6 +75,7 @@ async function main() {
 
     await createReadme({
       addWip: true,
+      repository: answers.repository,
       repo,
       description: answers.description
     });
@@ -92,6 +94,10 @@ async function main() {
 
     await command("git add README.md");
     await command("git commit -m 'docs(README): initial version'");
+
+    await createIssueTemplates(answers.packageName);
+    await command("git add .github/ISSUE_TEMPLATE");
+    await command("git commit -m 'docs(ISSUE_TEMPLATES): initial version'");
 
     await createRepository(octokit, {
       isUserRepo,
