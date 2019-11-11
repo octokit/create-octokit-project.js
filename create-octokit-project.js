@@ -32,7 +32,7 @@ async function main() {
   console.log(`token created for ${username}.`);
 
   const octokit = new Octokit({ auth });
-  octokit.hook.before("request", async options => {
+  octokit.hook.before("request", async (options) => {
     const { method, url, ...parameters } = octokit.request.endpoint.parse(
       options
     );
@@ -49,7 +49,7 @@ async function main() {
   });
 
   const {
-    data: { name, email, blog: website }
+    data: { name, email, blog: website },
   } = await octokit.request("GET /user");
 
   try {
@@ -77,7 +77,7 @@ async function main() {
       addWip: true,
       repository: answers.repository,
       repo,
-      description: answers.description
+      description: answers.description,
     });
     console.log(`README.md created`);
 
@@ -103,7 +103,7 @@ async function main() {
       isUserRepo,
       owner,
       repo,
-      description: answers.description
+      description: answers.description,
     });
 
     await command(
@@ -114,7 +114,7 @@ async function main() {
 
     createReadme({
       repo,
-      description: answers.description
+      description: answers.description,
     });
 
     await command(`git commit README.md -m 'docs(README): remove WIP note'`);
@@ -131,7 +131,7 @@ async function main() {
 - [ ] Install https://github.com/apps/greenkeeper
 - [ ] Install https://github.com/apps/pika-ci
 - [ ] Create npm token at \`https://www.npmjs.com/settings/<your npm username>/tokens/create\` (with "Read and Publish" selected) and add it as \`NPM_TOKEN\` at Then create secret at https://github.com/${answers.repository}/settings/secrets
-`
+`,
     });
 
     await createPackageJson(answers);
@@ -146,7 +146,7 @@ async function main() {
       "semantic-release",
       "semantic-release-plugin-update-version-in-files",
       "ts-jest",
-      "typescript"
+      "typescript",
     ];
 
     if (answers.supportsBrowsers) {
@@ -191,9 +191,9 @@ async function main() {
             module: "esnext",
             moduleResolution: "node",
             strict: true,
-            target: "es2020"
+            target: "es2020",
           },
-          include: ["src/**/*"]
+          include: ["src/**/*"],
         },
         null,
         2
@@ -306,7 +306,7 @@ ${answers.exportName}.VERSION = VERSION`
       repo,
       description: answers.description,
       packageName: answers.packageName,
-      repository: answers.repository
+      repository: answers.repository,
     });
     await command(`git commit README.md -m 'docs(README): badges'`);
 
@@ -321,7 +321,7 @@ ${answers.exportName}.VERSION = VERSION`
       exportName: answers.exportName,
       supportsBrowsers: answers.supportsBrowsers,
       supportsNode: answers.supportsNode,
-      usageExample: answers.usageExample
+      usageExample: answers.usageExample,
     });
     await command(`git commit README.md -m 'docs(README): usage'`);
 
@@ -350,7 +350,7 @@ $ cd ${answers.path}`);
     "Deleting personal access token (might ask for two-factor code again) ..."
   );
   await octokit.request("DELETE /authorizations/:authorization_id", {
-    authorization_id: tokenId
+    authorization_id: tokenId,
   });
   console.log("All done.");
 }
