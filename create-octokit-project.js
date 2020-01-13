@@ -130,7 +130,7 @@ async function main() {
 - [ ] 100% test coverage
 - [ ] Install https://github.com/apps/greenkeeper
 - [ ] Install https://github.com/apps/pika-ci
-- [ ] Create npm token at \`https://www.npmjs.com/settings/<your npm username>/tokens/create\` (with "Read and Publish" selected) and add it as \`NPM_SECRET\` at Then create secret at https://github.com/${answers.repository}/secrets
+- [ ] Create npm token at \`https://www.npmjs.com/settings/<your npm username>/tokens/create\` (with "Read and Publish" selected) and add it as \`NPM_TOKEN\` at Then create secret at https://github.com/${answers.repository}/secrets
 `
     });
 
