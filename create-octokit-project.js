@@ -16,6 +16,7 @@ const createPackageJson = require("./lib/create-package-json");
 const createPullRequest = require("./lib/create-pull-request");
 const createReadme = require("./lib/create-readme");
 const createReleaseAction = require("./lib/create-release-action");
+const createUpdatePrettierAction = require("./lib/create-update-prettier-action");
 const createTestAction = require("./lib/create-test-action");
 const createRepository = require("./lib/create-repository");
 const inviteCollaborators = require("./lib/invite-collaborators");
@@ -334,6 +335,10 @@ ${answers.exportName}.VERSION = VERSION`
     await createTestAction();
     await command(`git add .github/workflows/test.yml`);
     await command(`git commit -m 'ci(test): initial version'`);
+
+    await createUpdatePrettierAction();
+    await command(`git add .github/workflows/update-prettier.yml`);
+    await command(`git commit -m 'ci(update-prettier): initial version'`);
 
     await command(`git push`);
 
