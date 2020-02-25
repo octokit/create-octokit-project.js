@@ -191,7 +191,7 @@ async function main() {
             module: "esnext",
             moduleResolution: "node",
             strict: true,
-            target: "es2018"
+            target: "es2020"
           },
           include: ["src/**/*"]
         },
