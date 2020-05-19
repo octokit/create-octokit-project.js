@@ -2,8 +2,6 @@
 
 > "npm init" script to create a new folder and repository for an Octokit JavaScript project
 
-[![Dependabot Status](https://api.dependabot.com/badges/status?host=github&repo=octokit/create-octokit-project.js)](https://dependabot.com/)
-
 ## Usage
 
 ```shell
