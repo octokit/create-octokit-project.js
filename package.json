@@ -13,8 +13,8 @@
   "author": "Gregor Martynus (https://twitter.com/gr2m)",
   "license": "MIT",
   "scripts": {
-    "lint": "prettier --check '{src,test}/**/*.{ts,md}' README.md package.json",
-    "lint:fix": "prettier --write '{src,test}/**/*.{ts,md}' README.md package.json",
+    "lint": "prettier --check 'lib/*.js' create-octokit-project.js README.md package.json",
+    "lint:fix": "prettier --write 'lib/*.js' create-octokit-project.js README.md package.json",
     "test": "npm run lint"
   },
   "dependencies": {
