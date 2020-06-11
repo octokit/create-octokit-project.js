@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@octokit/auth-basic": "^1.4.5",
-    "@octokit/core": "^2.5.3",
+    "@octokit/core": "^2.5.4",
     "execa": "^4.0.2",
     "inquirer": "^7.1.0",
     "spdx-license-list": "^6.1.0"
