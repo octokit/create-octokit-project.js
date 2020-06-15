@@ -2,6 +2,7 @@
 
 const { inspect } = require("util");
 const { mkdir, writeFile } = require("fs").promises;
+const { format } = require("prettier");
 
 const { Octokit } = require("@octokit/core");
 
@@ -64,6 +65,7 @@ async function main() {
     process.chdir(answers.path);
 
     await command("git init");
+    await command("git checkout -b main");
 
     createLicense(answers.licenseName);
     console.log(`LICENSE created`);
@@ -125,12 +127,12 @@ async function main() {
       owner,
       repo,
       head: "initial-version",
-      base: "master",
+      base: "main",
       title: "🚧 Initial version",
       body: `- [ ] Implement features. Create separate \`feat: ...\` commits for each feature of the initial version
 - [ ] 100% test coverage
 - [ ] Install https://github.com/apps/pika-ci
-- [ ] Create npm token at \`https://www.npmjs.com/settings/<your npm username>/tokens/create\` (with "Read and Publish" selected) and add it as \`NPM_TOKEN\` at Then create secret at https://github.com/${answers.repository}/settings/secrets
+- [ ] Create npm token at \`https://www.npmjs.com/settings/<your npm username>/tokens/create\` (with "Read and Publish" selected) and add it as \`NPM_TOKEN\` at Then create secret at https://github.com/${answers.repository}/settings/secrets/new
 `,
     });
 
@@ -170,7 +172,7 @@ async function main() {
       await inviteCollaborators(octokit, { owner, repo });
     }
 
-    console.log("Create branch protection for master");
+    console.log("Create branch protection for main");
     await createBranchProtection(octokit, { owner, repo });
 
     await writeFile(
@@ -184,8 +186,8 @@ async function main() {
 
     writeFile(
       "tsconfig.json",
-      JSON.stringify(
-        {
+      format(
+        JSON.stringify({
           compilerOptions: {
             esModuleInterop: true,
             module: "esnext",
@@ -194,10 +196,11 @@ async function main() {
             target: "es2020",
           },
           include: ["src/**/*"],
-        },
-        null,
-        2
-      ) + "\n"
+        }),
+        {
+          parser: "json",
+        }
+      )
     );
     await command(`git add tsconfig.json`);
     await command(`git commit -m 'build(typescript): configuration for pika'`);
@@ -208,7 +211,8 @@ async function main() {
     if (answers.isPlugin) {
       await writeFile(
         "test/smoke.test.ts",
-        `import { Octokit } from "@octokit/core";
+        format(
+          `import { Octokit } from "@octokit/core";
         
 import { ${answers.exportName} } from "../src";
   
@@ -228,12 +232,15 @@ import { ${answers.exportName} } from "../src";
       }).not.toThrow();
     });
   });
-  `
+  `,
+          { parser: "typescript" }
+        )
       );
     }
     await writeFile(
       "test/smoke.test.ts",
-      `import { ${answers.exportName} } from "../src";
+      format(
+        `import { ${answers.exportName} } from "../src";
 
 describe("Smoke test", () => {
   it("is a function", () => {
@@ -243,8 +250,9 @@ describe("Smoke test", () => {
   it("${answers.exportName}.VERSION is set", () => {
     expect(${answers.exportName}.VERSION).toEqual("0.0.0-development");
   });
-});
-`
+});`,
+        { parser: "typescript" }
+      )
     );
 
     await command(`git add test`);
@@ -254,13 +262,16 @@ describe("Smoke test", () => {
     await mkdir("src");
     await writeFile(
       "src/version.ts",
-      'export const VERSION = "0.0.0-development";\n'
+      format('export const VERSION = "0.0.0-development";', {
+        parser: "typescript",
+      })
     );
 
     if (answers.isPlugin) {
       await writeFile(
         "src/index.ts",
-        `import { VERSION } from "./version";
+        format(
+          `import { VERSION } from "./version";
 
 type Octokit = any;
 type Options = {
@@ -273,7 +284,9 @@ type Options = {
  */
 export function ${answers.exportName}(octokit: Octokit, options: Options) {}
 ${answers.exportName}.VERSION = VERSION;
-`
+`,
+          { parser: "typescript" }
+        )
       );
     } else {
       const isClass = /^[A-Z]/.test(answers.exportName);
@@ -281,19 +294,25 @@ ${answers.exportName}.VERSION = VERSION;
       if (isClass) {
         await writeFile(
           "src/index.ts",
-          `import { VERSION } from './version'
+          format(
+            `import { VERSION } from './version'
 
 export class ${answers.exportName} {
   static VERSION = VERSION
-}`
+}`,
+            { parser: "typescript" }
+          )
         );
       } else {
         await writeFile(
           "src/index.ts",
-          `import { VERSION } from './version'
+          format(
+            `import { VERSION } from './version'
 
 export function ${answers.exportName}() {}
-${answers.exportName}.VERSION = VERSION`
+${answers.exportName}.VERSION = VERSION`,
+            { parser: "typescript" }
+          )
         );
       }
     }
