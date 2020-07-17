@@ -18,7 +18,7 @@
     "test": "npm run lint"
   },
   "dependencies": {
-    "@octokit/auth-basic": "^1.4.5",
+    "@octokit/auth-basic": "^1.4.6",
     "@octokit/core": "^3.1.0",
     "execa": "^4.0.3",
     "inquirer": "^7.3.2",
