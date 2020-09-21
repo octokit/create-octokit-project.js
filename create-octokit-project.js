@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 const { inspect } = require("util");
-const { mkdir, writeFile } = require("fs").promises;
+const { mkdir } = require("fs").promises;
 
-const { Octokit } = require("@octokit/core");
+const inquirer = require("inquirer");
 
-const authenticate = require("./lib/authenticate");
+const getAuthenticatedOctokit = require("./lib/get-authenticated-Octokit");
 const command = require("./lib/command");
 const createBranchProtection = require("./lib/create-branch-protection");
 const createCoc = require("./lib/create-coc");
@@ -21,6 +21,7 @@ const createTestAction = require("./lib/create-test-action");
 const createRepository = require("./lib/create-repository");
 const inviteCollaborators = require("./lib/invite-collaborators");
 const prompts = require("./lib/prompts");
+const writePrettyFile = require("./lib/write-pretty-file");
 
 main();
 
@@ -29,10 +30,19 @@ async function main() {
     `"create-octokit-project" needs to create a personal access token using username & password. Your credentials are not stored and the token will be deleted on completion.`
   );
 
-  const { auth, tokenId, username } = await authenticate();
-  console.log(`token created for ${username}.`);
-
-  const octokit = new Octokit({ auth });
+  const { username, password } = await inquirer.prompt([
+    {
+      type: "input",
+      name: "username",
+      message: "What is your GitHub username?",
+    },
+    {
+      type: "password",
+      name: "password",
+      message: "What is your GitHub password?",
+    },
+  ]);
+  const octokit = getAuthenticatedOctokit({ username, password });
   octokit.hook.before("request", async (options) => {
     const { method, url, ...parameters } = octokit.request.endpoint.parse(
       options
@@ -158,7 +168,7 @@ async function main() {
     await command(`git add package-lock.json`);
     await command(`git commit -m 'build(package): lock file'`);
 
-    if (!isUserRepo) {
+    if (owner === "octokit") {
       console.log("Inviting collaborators...");
       await inviteCollaborators(octokit, { owner, repo });
     }
@@ -166,127 +176,128 @@ async function main() {
     console.log("Create branch protection for main");
     await createBranchProtection(octokit, { owner, repo });
 
-    await writeFile(
+    await writePrettyFile(
       ".gitignore",
-      ["coverage/", "node_modules/", "pkg/"].join("\n") + "\n"
+      ["coverage/", "node_modules/", "pkg/"].join("\n")
     );
     await command(`git add .gitignore`);
     await command(
       `git commit -m 'build(gitignore): coverage, node_modules, pkg'`
     );
 
-    writeFile(
+    writePrettyFile(
       "tsconfig.json",
-      JSON.stringify(
-        {
-          compilerOptions: {
-            esModuleInterop: true,
-            module: "esnext",
-            moduleResolution: "node",
-            strict: true,
-            target: "es2020",
-          },
-          include: ["src/**/*"],
+      JSON.stringify({
+        compilerOptions: {
+          esModuleInterop: true,
+          module: "esnext",
+          moduleResolution: "node",
+          strict: true,
+          target: "es2020",
         },
-        null,
-        2
-      ) + "\n"
+        include: ["src/**/*"],
+      })
     );
     await command(`git add tsconfig.json`);
     await command(`git commit -m 'build(typescript): configuration for pika'`);
 
     console.log("create smoke test");
-    await mkdir("test");
 
     if (answers.isPlugin) {
-      await writeFile(
+      await writePrettyFile(
         "test/smoke.test.ts",
-        `import { Octokit } from "@octokit/core";
-        
-import { ${answers.exportName} } from "../src";
-  
-  describe("Smoke test", () => {
-    it("{ ${answers.exportName} } export is a function", () => {
-      expect(${answers.exportName}).toBeInstanceOf(Function);
-    });
-  
-    it("${answers.exportName}.VERSION is set", () => {
-      expect(${answers.exportName}.VERSION).toEqual("0.0.0-development");
-    });
-  
-    it("Loads plugin", () => {
-      expect(() => {
-        const TestOctokit = Octokit.plugin(${answers.exportName})
-        new TestOctokit();
-      }).not.toThrow();
-    });
-  });
-  `
+        `
+          import { Octokit } from "@octokit/core";
+          
+          import { ${answers.exportName} } from "../src";
+            
+            describe("Smoke test", () => {
+              it("{ ${answers.exportName} } export is a function", () => {
+                expect(${answers.exportName}).toBeInstanceOf(Function);
+              });
+            
+              it("${answers.exportName}.VERSION is set", () => {
+                expect(${answers.exportName}.VERSION).toEqual("0.0.0-development");
+              });
+            
+              it("Loads plugin", () => {
+                expect(() => {
+                  const TestOctokit = Octokit.plugin(${answers.exportName})
+                  new TestOctokit();
+                }).not.toThrow();
+              });
+            });
+        `
       );
     }
-    await writeFile(
+    await writePrettyFile(
       "test/smoke.test.ts",
-      `import { ${answers.exportName} } from "../src";
+      `
+        import { ${answers.exportName} } from "../src";
 
-describe("Smoke test", () => {
-  it("is a function", () => {
-    expect(${answers.exportName}).toBeInstanceOf(Function);
-  });
+        describe("Smoke test", () => {
+          it("is a function", () => {
+            expect(${answers.exportName}).toBeInstanceOf(Function);
+          });
 
-  it("${answers.exportName}.VERSION is set", () => {
-    expect(${answers.exportName}.VERSION).toEqual("0.0.0-development");
-  });
-});
-`
+          it("${answers.exportName}.VERSION is set", () => {
+            expect(${answers.exportName}.VERSION).toEqual("0.0.0-development");
+          });
+        });
+      `
     );
 
     await command(`git add test`);
     await command(`git commit -m 'test: initial version'`);
 
     console.log("create src");
-    await mkdir("src");
-    await writeFile(
+    await writePrettyFile(
       "src/version.ts",
-      'export const VERSION = "0.0.0-development";\n'
+      'export const VERSION = "0.0.0-development"'
     );
 
     if (answers.isPlugin) {
-      await writeFile(
+      await writePrettyFile(
         "src/index.ts",
-        `import { VERSION } from "./version";
+        `
+          import { VERSION } from "./version";
 
-type Octokit = any;
-type Options = {
-  [option: string]: any;
-};
+          type Octokit = any;
+          type Options = {
+            [option: string]: any;
+          };
 
-/**
- * @param octokit Octokit instance
- * @param options Options passed to Octokit constructor
- */
-export function ${answers.exportName}(octokit: Octokit, options: Options) {}
-${answers.exportName}.VERSION = VERSION;
-`
+          /**
+           * @param octokit Octokit instance
+           * @param options Options passed to Octokit constructor
+           */
+          export function ${answers.exportName}(octokit: Octokit, options: Options) {}
+          ${answers.exportName}.VERSION = VERSION;
+        `
       );
     } else {
       const isClass = /^[A-Z]/.test(answers.exportName);
 
       if (isClass) {
-        await writeFile(
+        await writePrettyFile(
           "src/index.ts",
-          `import { VERSION } from './version'
+          `
+            import { VERSION } from './version'
 
-export class ${answers.exportName} {
-  static VERSION = VERSION
-}`
+            export class ${answers.exportName} {
+              static VERSION = VERSION
+            }
+          `
         );
       } else {
-        await writeFile(
+        await writePrettyFile(
           "src/index.ts",
-          `import { VERSION } from './version'
+          `
+            import { VERSION } from './version'
 
-export function ${answers.exportName}() {}
-${answers.exportName}.VERSION = VERSION`
+            export function ${answers.exportName}() {}
+            ${answers.exportName}.VERSION = VERSION
+          `
         );
       }
     }
@@ -319,7 +330,6 @@ ${answers.exportName}.VERSION = VERSION`
     await command(`git commit README.md -m 'docs(README): usage'`);
 
     console.log("Create actions");
-    await mkdir(".github/workflows", { recursive: true });
     await createReleaseAction({ owner });
     await command(`git add .github/workflows/release.yml`);
     await command(`git commit -m 'ci(release): initial version'`);
@@ -346,8 +356,10 @@ $ cd ${answers.path}`);
   console.log(
     "Deleting personal access token (might ask for two-factor code again) ..."
   );
+  const authorization = await octokit.auth({ type: "token" });
+
   await octokit.request("DELETE /authorizations/:authorization_id", {
-    authorization_id: tokenId,
+    authorization_id: authorization.id,
   });
   console.log("All done.");
 }
