@@ -15,7 +15,7 @@ npm init octokit-project
 - Add `LICENSE`, `CODE_OF_CONDUCT.md` and `README.md` files
 - Creates a repository
 - Adds repository as `git remote add origin <url>`
-- Push the 3 files to master
+- Push the 3 files to main
 - Creates a new local branch called `initial-version`
 - Creates a `package.json` and `package-lock.json`. Installs dev dependencies.
 - Creates `.gitignore`, `tsconfig.json`

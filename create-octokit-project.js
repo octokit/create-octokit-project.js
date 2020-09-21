@@ -125,7 +125,7 @@ async function main() {
       owner,
       repo,
       head: "initial-version",
-      base: "master",
+      base: "main",
       title: "🚧 Initial version",
       body: `- [ ] Implement features. Create separate \`feat: ...\` commits for each feature of the initial version
 - [ ] 100% test coverage
@@ -170,7 +170,7 @@ async function main() {
       await inviteCollaborators(octokit, { owner, repo });
     }
 
-    console.log("Create branch protection for master");
+    console.log("Create branch protection for main");
     await createBranchProtection(octokit, { owner, repo });
 
     await writeFile(
