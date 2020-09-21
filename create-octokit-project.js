@@ -64,6 +64,7 @@ async function main() {
     process.chdir(answers.path);
 
     await command("git init");
+    await command("git checkout -b main");
 
     createLicense(answers.licenseName);
     console.log(`LICENSE created`);
