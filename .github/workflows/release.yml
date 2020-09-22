@@ -14,14 +14,7 @@ jobs:
         with:
           node-version: "12.x"
       - run: npm ci
-      - run: npx semantic-release --debug
+      - run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.OCTOKITBOT_NPM_TOKEN }}
-      - run: |
-          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
-          npm whoami
-          npm access ls-collaborators
-        if: ${{ failure() }}
-        env:
           NPM_TOKEN: ${{ secrets.OCTOKITBOT_NPM_TOKEN }}
