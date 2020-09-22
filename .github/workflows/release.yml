@@ -18,7 +18,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.OCTOKITBOT_NPM_TOKEN }}
-      - run: npm whoami && npm access ls-collaborators
+      - run: |
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > ~/.npmrc
+          npm whoami
+          npm access ls-collaborators
         if: ${{ failure() }}
         env:
           NPM_TOKEN: ${{ secrets.OCTOKITBOT_NPM_TOKEN }}
