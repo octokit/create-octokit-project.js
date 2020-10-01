@@ -23,10 +23,10 @@
     "camelcase": "^6.0.0",
     "execa": "^4.0.3",
     "inquirer": "^7.3.3",
+    "prettier": "^2.1.2",
     "spdx-license-list": "^6.3.0"
   },
   "devDependencies": {
-    "prettier": "^2.1.2",
     "semantic-release": "^17.1.2"
   },
   "release": {
