@@ -29,6 +29,9 @@
   "devDependencies": {
     "semantic-release": "^17.1.2"
   },
+  "peerDependencies": {
+    "@octokit/core": ">=3"
+  },
   "release": {
     "branches": [
       "main"
