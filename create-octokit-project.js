@@ -140,6 +140,7 @@ async function main() {
     await createPackageJson(answers);
     console.log("Install dependencies");
     const dependencies = [
+      "@octokit/tsconfig",
       "@pika/pack",
       "@pika/plugin-ts-standard-pkg",
       "@types/jest",
@@ -188,13 +189,7 @@ async function main() {
     writePrettyFile(
       "tsconfig.json",
       JSON.stringify({
-        compilerOptions: {
-          esModuleInterop: true,
-          module: "esnext",
-          moduleResolution: "node",
-          strict: true,
-          target: "es2020",
-        },
+        extends: "@octokit/tsconfig",
         include: ["src/**/*"],
       })
     );
