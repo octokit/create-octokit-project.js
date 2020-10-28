@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@octokit/auth-basic": "^1.4.7",
-    "@octokit/core": "^3.1.4",
+    "@octokit/core": "^3.2.0",
     "camelcase": "^6.1.0",
     "execa": "^4.0.3",
     "inquirer": "^7.3.3",
