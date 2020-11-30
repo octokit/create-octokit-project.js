@@ -4,8 +4,8 @@ const { inspect } = require("util");
 const { mkdir } = require("fs").promises;
 
 const inquirer = require("inquirer");
+const { Octokit } = require("@octokit/core");
 
-const getAuthenticatedOctokit = require("./lib/get-authenticated-Octokit");
 const command = require("./lib/command");
 const createBranchProtection = require("./lib/create-branch-protection");
 const createCoc = require("./lib/create-coc");
@@ -27,22 +27,16 @@ main();
 
 async function main() {
   console.log(
-    `"create-octokit-project" needs to create a personal access token using username & password. Your credentials are not stored and the token will be deleted on completion.`
+    `"create-octokit-project" requires a personal access token with the "repo" scope enabled. You can create one at https://github.com/settings/tokens/new?scopes=repo`
   );
 
-  const { username, password } = await inquirer.prompt([
+  const { token } = await inquirer.prompt([
     {
       type: "input",
-      name: "username",
-      message: "What is your GitHub username?",
-    },
-    {
-      type: "password",
-      name: "password",
-      message: "What is your GitHub password?",
+      name: "token",
     },
   ]);
-  const octokit = getAuthenticatedOctokit({ username, password });
+  const octokit = new Octokit({ auth: token });
   octokit.hook.before("request", async (options) => {
     const { method, url, ...parameters } = octokit.request.endpoint.parse(
       options
@@ -60,13 +54,13 @@ async function main() {
   });
 
   const {
-    data: { name, email, blog: website },
+    data: { login, name, email, blog: website },
   } = await octokit.request("GET /user");
 
   try {
-    const answers = await prompts({ username, name, email, website });
+    const answers = await prompts({ login, name, email, website });
     const [owner, repo] = answers.repository.split("/");
-    const isUserRepo = answers.repository.startsWith(username);
+    const isUserRepo = answers.repository.startsWith(login);
 
     // create project folder and chdir into it
     console.log(`Creating ${answers.path}`);
@@ -348,13 +342,5 @@ $ cd ${answers.path}`);
     console.log(error);
   }
 
-  console.log(
-    "Deleting personal access token (might ask for two-factor code again) ..."
-  );
-  const authorization = await octokit.auth({ type: "token" });
-
-  await octokit.request("DELETE /authorizations/:authorization_id", {
-    authorization_id: authorization.id,
-  });
   console.log("All done.");
 }
