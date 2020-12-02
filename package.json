@@ -18,7 +18,7 @@
     "test": "npm run lint"
   },
   "dependencies": {
-    "@octokit/core": "^3.2.1",
+    "@octokit/core": "^3.2.2",
     "camelcase": "^6.2.0",
     "execa": "^4.1.0",
     "inquirer": "^7.3.3",
