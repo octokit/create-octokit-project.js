@@ -5,6 +5,8 @@ const { mkdir } = require("fs").promises;
 
 const inquirer = require("inquirer");
 const { Octokit } = require("@octokit/core");
+const { createOAuthDeviceAuth } = require("@octokit/auth-oauth-device");
+const clipboardy = require("clipboardy");
 
 const command = require("./lib/command");
 const createBranchProtection = require("./lib/create-branch-protection");
@@ -27,15 +29,36 @@ main();
 
 async function main() {
   console.log(
-    `"create-octokit-project" requires a personal access token with the "repo" scope enabled. You can create one at https://github.com/settings/tokens/new?scopes=repo`
+    `"create-octokit-project" requires a personal access. If you want to create a public repository, You can create one at https://github.com/settings/tokens/new?scopes=repo`
   );
 
-  const { token } = await inquirer.prompt([
+  const { repositoryType } = await inquirer.prompt([
     {
-      type: "input",
-      name: "token",
+      name: "repositoryType",
+      type: "list",
+      message: "Do you want to create a public or private repository?",
+      choices: ["public", "private"],
     },
   ]);
+
+  const auth = createOAuthDeviceAuth({
+    clientId: "797fc7c2acb5f7c1bed3", // Create Octokit Project OAuth app by @octokit
+    scopes: repositoryType === "public" ? ["public_repo"] : ["repo"],
+    async onVerification({ verification_uri, user_code }) {
+      console.log("Open %s", verification_uri);
+      console.log("Paste code: %s (copied to your clipboard)", user_code);
+
+      await clipboardy.write(user_code);
+
+      await inquirer.prompt({
+        name: "grant_access",
+        type: "confirm",
+        message: "Press <enter> when ready",
+      });
+    },
+  });
+
+  const { token } = await auth({ type: "oauth" });
   const octokit = new Octokit({ auth: token });
   octokit.hook.before("request", async (options) => {
     const { method, url, ...parameters } = octokit.request.endpoint.parse(
