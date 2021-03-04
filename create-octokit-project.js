@@ -28,10 +28,6 @@ const writePrettyFile = require("./lib/write-pretty-file");
 main();
 
 async function main() {
-  console.log(
-    `"create-octokit-project" requires a personal access. If you want to create a public repository, You can create one at https://github.com/settings/tokens/new?scopes=repo`
-  );
-
   const { repositoryType } = await inquirer.prompt([
     {
       name: "repositoryType",
