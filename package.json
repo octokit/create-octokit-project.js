@@ -6,7 +6,7 @@
   "bin": {
     "create-octokit-project": "create-octokit-project.js"
   },
-  "repository": "https://github.com/octokit/create-octokit-project.js",
+  "repository": "github:octokit/create-octokit-project.js",
   "keywords": [
     "npm-init"
   ],
