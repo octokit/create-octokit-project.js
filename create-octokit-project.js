@@ -37,9 +37,24 @@ async function main() {
     },
   ]);
 
+  const { useOctokitOrg } = await inquirer.prompt([
+    {
+      name: "useOctokitOrg",
+      type: "confirm",
+      message:
+        "If you have access, do you want to create the repository in the @octokit organization?",
+      default: false,
+    },
+  ]);
+
+  const scopes = [
+    repositoryType === "public" ? "public_repo" : "repo",
+    useOctokitOrg ? "admin:org" : "",
+  ].filter(Boolean);
+
   const auth = createOAuthDeviceAuth({
     clientId: "797fc7c2acb5f7c1bed3", // Create Octokit Project OAuth app by @octokit
-    scopes: repositoryType === "public" ? ["public_repo"] : ["repo"],
+    scopes,
     async onVerification({ verification_uri, user_code }) {
       console.log("Open %s", verification_uri);
       console.log("Paste code: %s (copied to your clipboard)", user_code);
@@ -77,7 +92,13 @@ async function main() {
   } = await octokit.request("GET /user");
 
   try {
-    const answers = await prompts({ login, name, email, website });
+    const answers = await prompts({
+      login,
+      name,
+      email,
+      website,
+      useOctokitOrg,
+    });
     const [owner, repo] = answers.repository.split("/");
     const isUserRepo = answers.repository.startsWith(login);
 
