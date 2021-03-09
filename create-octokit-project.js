@@ -141,7 +141,7 @@ async function main() {
     await command("git add README.md");
     await command("git commit -m 'docs(README): initial version'");
 
-    await createIssueTemplates(answers.packageName);
+    await createIssueTemplates(useOctokitOrg);
     await command("git add .github/ISSUE_TEMPLATE");
     await command("git commit -m 'docs(ISSUE_TEMPLATES): initial version'");
 
