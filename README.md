@@ -1,6 +1,6 @@
 # Create new Octokit JS project
 
-> "[npm init](https://docs.npmjs.com/cli/v7/commands/npm-init)" script to create a new folder and repository for an Octokit JavaScript project
+> "[npm init](https://docs.npmjs.com/cli/v7/commands/npm-init)" script to create a new folder and repository for an Octokit JavaScript module (plugin, authentication strategy, or otherwise)
 
 ## Usage
 
