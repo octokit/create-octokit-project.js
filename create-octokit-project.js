@@ -173,7 +173,8 @@ async function main() {
 
     await createPackageJson(answers);
     console.log("Install dependencies");
-    const dependencies = [
+    const dependencies = [];
+    const devDependencies = [
       "@octokit/tsconfig",
       "@pika/pack",
       "@pika/plugin-ts-standard-pkg",
@@ -188,15 +189,22 @@ async function main() {
     ];
 
     if (answers.supportsBrowsers) {
-      dependencies.push("@pika/plugin-build-web");
+      devDependencies.push("@pika/plugin-build-web");
     }
     if (answers.supportsNode) {
-      dependencies.push("@pika/plugin-build-node");
+      devDependencies.push("@pika/plugin-build-node");
     }
-    if (answers.isPlugin) {
-      dependencies.push("@octokit/core");
+    if (answers.isPlugin || answers.isAuthenticationStrategy) {
+      devDependencies.push("@octokit/core");
     }
-    await command(`npm install --save-dev ${dependencies.join(" ")}`);
+    if (answers.isAuthenticationStrategy) {
+      dependencies.push("@octokit/types");
+    }
+    await command(`npm install --save-dev ${devDependencies.join(" ")}`);
+
+    if (dependencies.length) {
+      await command(`npm install ${dependencies.join(" ")}`);
+    }
 
     await command(`git add package.json`);
     await command(`git commit -m 'build(package): initial version'`);
@@ -240,41 +248,42 @@ async function main() {
           
           import { ${answers.exportName} } from "../src";
             
-            describe("Smoke test", () => {
-              it("{ ${answers.exportName} } export is a function", () => {
-                expect(${answers.exportName}).toBeInstanceOf(Function);
-              });
-            
-              it("${answers.exportName}.VERSION is set", () => {
-                expect(${answers.exportName}.VERSION).toEqual("0.0.0-development");
-              });
-            
-              it("Loads plugin", () => {
-                expect(() => {
-                  const TestOctokit = Octokit.plugin(${answers.exportName})
-                  new TestOctokit();
-                }).not.toThrow();
-              });
+          describe("Smoke test", () => {
+            it("{ ${answers.exportName} } export is a function", () => {
+              expect(${answers.exportName}).toBeInstanceOf(Function);
             });
+          
+            it("${answers.exportName}.VERSION is set", () => {
+              expect(${answers.exportName}.VERSION).toEqual("0.0.0-development");
+            });
+          
+            it("Loads plugin", () => {
+              expect(() => {
+                const TestOctokit = Octokit.plugin(${answers.exportName})
+                new TestOctokit();
+              }).not.toThrow();
+            });
+          });
+        `
+      );
+    } else {
+      await writePrettyFile(
+        "test/smoke.test.ts",
+        `
+          import { ${answers.exportName} } from "../src";
+
+          describe("Smoke test", () => {
+            it("is a function", () => {
+              expect(${answers.exportName}).toBeInstanceOf(Function);
+            });
+
+            it("${answers.exportName}.VERSION is set", () => {
+              expect(${answers.exportName}.VERSION).toEqual("0.0.0-development");
+            });
+          });
         `
       );
     }
-    await writePrettyFile(
-      "test/smoke.test.ts",
-      `
-        import { ${answers.exportName} } from "../src";
-
-        describe("Smoke test", () => {
-          it("is a function", () => {
-            expect(${answers.exportName}).toBeInstanceOf(Function);
-          });
-
-          it("${answers.exportName}.VERSION is set", () => {
-            expect(${answers.exportName}.VERSION).toEqual("0.0.0-development");
-          });
-        });
-      `
-    );
 
     await command(`git add test`);
     await command(`git commit -m 'test: initial version'`);
@@ -289,12 +298,10 @@ async function main() {
       await writePrettyFile(
         "src/index.ts",
         `
+          import { Octokit } from "@octokit/core";
           import { VERSION } from "./version";
 
-          type Octokit = any;
-          type Options = {
-            [option: string]: any;
-          };
+          type Options = Record<string, unknown>;
 
           /**
            * @param octokit Octokit instance
@@ -302,6 +309,78 @@ async function main() {
            */
           export function ${answers.exportName}(octokit: Octokit, options: Options) {}
           ${answers.exportName}.VERSION = VERSION;
+        `
+      );
+    } else if (answers.isAuthenticationStrategy) {
+      await writePrettyFile(
+        "src/index.ts",
+        `
+          import { VERSION } from "./version";
+          import { auth } from "./auth";
+          import { hook } from "./hook";
+          import { StrategyOptions, AuthOptions, Authentication } from "./types";
+          
+          export type Types = {
+            StrategyOptions: any;
+            AuthOptions: any;
+            Authentication: any;
+          };
+          
+          export const ${answers.exportName}: StrategyInterface = function ${answers.exportName}(
+            options: StrategyOption
+          ) {
+            return Object.assign(auth.bind(null, options), {
+              hook: hook.bind(null, options),
+            });
+          };
+          
+        `
+      );
+      await writePrettyFile(
+        "src/types.ts",
+        `
+          export type Types = {
+            StrategyOptions: any;
+            AuthOptions: any;
+            Authentication: any;
+          }; 
+        `
+      );
+      await writePrettyFile(
+        "src/auth.ts",
+        `
+          import { AuthOptions, Authentication } from "./types";
+
+          export async function auth(options: AuthOptions): Promise<Authentication> {
+            // TODO: add implementation
+          }        
+        `
+      );
+      await writePrettyFile(
+        "src/hook.ts",
+        `
+          import {
+            EndpointDefaults,
+            EndpointOptions,
+            OctokitResponse,
+            RequestInterface,
+            RequestParameters,
+            Route,
+          } from "@octokit/types";
+          import { AuthOptions } from "./types";
+          
+          type AnyResponse = OctokitResponse<any>
+          
+          export async function hook(
+            options: AuthOptions,
+            request: RequestInterface,
+            route: Route | EndpointOptions,
+            parameters: RequestParameters = {}
+          ): Promise<AnyResponse> {
+            // TODO: add implementation
+            //       probably something like setting the authorization header
+            return request(route, parameters);
+          }
         `
       );
     } else {
@@ -351,6 +430,8 @@ async function main() {
       packageName: answers.packageName,
       repository: answers.repository,
       isPlugin: answers.isPlugin,
+      isAuthenticationStrategy: answers.isAuthenticationStrategy,
+      octokitUsageExample: answers.octokitUsageExample,
       exportName: answers.exportName,
       supportsBrowsers: answers.supportsBrowsers,
       supportsNode: answers.supportsNode,
