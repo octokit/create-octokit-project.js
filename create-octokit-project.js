@@ -88,7 +88,7 @@ async function main() {
   });
 
   const {
-    data: { login, name, email, blog: website },
+    data: { id: userId, login, name, email, blog: website },
   } = await octokit.request("GET /user");
 
   try {
@@ -101,6 +101,14 @@ async function main() {
     });
     const [owner, repo] = answers.repository.split("/");
     const isUserRepo = answers.repository.startsWith(login);
+
+    let ownerId = userId;
+    if (!isUserRepo) {
+      const { data } = await octokit.request("GET /orgs/{org}", {
+        org: owner,
+      });
+      ownerId = data.id;
+    }
 
     // create project folder and chdir into it
     console.log(`Creating ${answers.path}`);
@@ -145,7 +153,9 @@ async function main() {
     await command("git add .github/ISSUE_TEMPLATE");
     await command("git commit -m 'docs(ISSUE_TEMPLATES): initial version'");
 
-    await createRepository(octokit, {
+    const {
+      data: { id: repositoryId },
+    } = await createRepository(octokit, {
       isUserRepo,
       owner,
       repo,
@@ -169,6 +179,8 @@ async function main() {
     await createPullRequest(octokit, {
       owner,
       repo,
+      ownerId,
+      repositoryId,
     });
 
     await createPackageJson(answers);
@@ -423,6 +435,7 @@ async function main() {
     await command(`git commit README.md -m 'docs(README): badges'`);
 
     await createReadme({
+      useOctokitOrg,
       addBadges: true,
       addUsage: true,
       repo,
