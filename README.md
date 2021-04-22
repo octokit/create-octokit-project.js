@@ -13,7 +13,6 @@ npm init octokit-project
 - Creates a new folder on your machine
 - Inits git in the new folder
 - Add `LICENSE`, `CODE_OF_CONDUCT.md` and `README.md` files
-- Prompts for script options and adds according documentation to the `README.md` file
 - Creates a repository
 - Adds repository as `git remote add origin <url>`
 - Push the 3 files to main
