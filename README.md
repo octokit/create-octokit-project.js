@@ -23,9 +23,7 @@ npm init octokit-project
 - Creates `test/smoke.test.ts`
 - Creates actions for tests and automated releases
 - Creates a pull request with further instructions
-- Adds repository collaborators
 - Adds branch protection
-- Adds workflow files for tests and automated releases
 
 ## Contribute
 
