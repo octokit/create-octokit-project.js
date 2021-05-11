@@ -72,9 +72,8 @@ async function main() {
   const { token } = await auth({ type: "oauth" });
   const octokit = new Octokit({ auth: token });
   octokit.hook.before("request", async (options) => {
-    const { method, url, ...parameters } = octokit.request.endpoint.parse(
-      options
-    );
+    const { method, url, ...parameters } =
+      octokit.request.endpoint.parse(options);
     console.log(`> ${method} ${url.replace("https://api.github.com", "")}`);
     for (const [name, value] of Object.entries(parameters.headers)) {
       console.log(`  ${name}: ${value}`);
