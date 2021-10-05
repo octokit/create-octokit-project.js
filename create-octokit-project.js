@@ -87,19 +87,19 @@ async function main() {
   });
 
   const {
-    data: { id: userId, login, name, email, blog: website },
+    data: { id: userId, login: username, name, email, blog: website },
   } = await octokit.request("GET /user");
 
   try {
     const answers = await prompts({
-      login,
+      username,
       name,
       email,
       website,
       useOctokitOrg,
     });
     const [owner, repo] = answers.repository.split("/");
-    const isUserRepo = answers.repository.startsWith(login);
+    const isUserRepo = answers.repository.startsWith(username);
 
     let ownerId = userId;
     if (!isUserRepo) {
