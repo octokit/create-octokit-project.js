@@ -28,7 +28,7 @@
     "spdx-license-list": "^6.3.0"
   },
   "devDependencies": {
-    "semantic-release": "^18.0.0"
+    "semantic-release": "^19.0.3"
   },
   "release": {
     "branches": [
