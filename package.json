@@ -21,7 +21,7 @@
     "@octokit/auth-oauth-device": "^3.0.0",
     "@octokit/core": "^3.2.4",
     "camelcase": "^7.0.0",
-    "clipboardy": "^2.3.0",
+    "clipboardy": "^3.0.0",
     "execa": "^6.0.0",
     "inquirer": "^9.0.0",
     "spdx-license-list": "^6.3.0"
