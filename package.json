@@ -23,7 +23,7 @@
     "camelcase": "^7.0.0",
     "clipboardy": "^2.3.0",
     "execa": "^5.0.0",
-    "inquirer": "^8.0.0",
+    "inquirer": "^9.0.0",
     "spdx-license-list": "^6.3.0"
   },
   "devDependencies": {
