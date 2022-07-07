@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@octokit/auth-oauth-device": "^3.0.0",
-    "@octokit/core": "^3.2.4",
+    "@octokit/core": "^4.0.0",
     "camelcase": "^7.0.0",
     "clipboardy": "^3.0.0",
     "execa": "^6.0.0",
