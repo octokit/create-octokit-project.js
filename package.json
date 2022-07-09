@@ -15,6 +15,7 @@
   "scripts": {
     "lint": "prettier --check 'lib/*.js' create-octokit-project.js README.md package.json",
     "lint:fix": "prettier --write 'lib/*.js' create-octokit-project.js README.md package.json",
+    "pretest": "npm run -s lint",
     "test": "npm run lint"
   },
   "dependencies": {
