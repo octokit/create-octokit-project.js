@@ -1,5 +1,3 @@
-#!/usr/bin/env node
-
 const { inspect } = require("util");
 const { mkdir } = require("fs").promises;
 
@@ -25,9 +23,7 @@ const inviteCollaborators = require("./lib/invite-collaborators");
 const prompts = require("./lib/prompts");
 const writePrettyFile = require("./lib/write-pretty-file");
 
-main();
-
-async function main() {
+module.exportst = async function main() {
   const { repositoryType } = await inquirer.prompt([
     {
       name: "repositoryType",
@@ -476,4 +472,4 @@ $ cd ${answers.path}`);
   }
 
   console.log("All done.");
-}
+};

@@ -2,9 +2,9 @@
   "name": "create-octokit-project",
   "version": "0.0.0-development",
   "description": "`npm init` script to create a new Octokit JS module (plugin, authentication strategy, or otherwise)",
-  "main": "create-octokit-project.js",
+  "main": "index.js",
   "bin": {
-    "create-octokit-project": "create-octokit-project.js"
+    "create-octokit-project": "bin/create-octokit-project.js"
   },
   "repository": "github:octokit/create-octokit-project.js",
   "keywords": [
@@ -13,17 +13,18 @@
   "author": "Gregor Martynus (https://twitter.com/gr2m)",
   "license": "MIT",
   "scripts": {
-    "lint": "prettier --check 'lib/*.js' create-octokit-project.js README.md package.json",
-    "lint:fix": "prettier --write 'lib/*.js' create-octokit-project.js README.md package.json",
-    "test": "npm run lint"
+    "lint": "prettier --check 'lib/*.js' index.js bin/create-octokit-project.js README.md package.json",
+    "lint:fix": "prettier --write 'lib/*.js' index.js bin/create-octokit-project.js README.md package.json",
+    "test": "node index.js",
+    "posttest": "npm run lint"
   },
   "dependencies": {
     "@octokit/auth-oauth-device": "^4.0.0",
     "@octokit/core": "^4.0.0",
-    "camelcase": "^7.0.0",
-    "clipboardy": "^3.0.0",
-    "execa": "^6.0.0",
-    "inquirer": "^9.0.0",
+    "camelcase": "^6.3.0",
+    "clipboardy": "^2.3.0",
+    "execa": "^5.1.1",
+    "inquirer": "^8.2.4",
     "spdx-license-list": "^6.3.0"
   },
   "devDependencies": {
