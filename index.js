@@ -18,6 +18,7 @@ const createReadme = require("./lib/create-readme");
 const createReleaseAction = require("./lib/create-release-action");
 const createUpdatePrettierAction = require("./lib/create-update-prettier-action");
 const createTestAction = require("./lib/create-test-action");
+const createRenovateConfig = require("./lib/create-renovate-config");
 const createRepository = require("./lib/create-repository");
 const inviteCollaborators = require("./lib/invite-collaborators");
 const prompts = require("./lib/prompts");
@@ -459,6 +460,13 @@ module.exportst = async function main() {
     await createUpdatePrettierAction();
     await command(`git add .github/workflows/update-prettier.yml`);
     await command(`git commit -m 'ci(update-prettier): initial version'`);
+
+    if (owner === "octokit") {
+      console.log("Create Renovate configuration");
+      await createRenovateConfig();
+      await command(`git add .github/renovate.json`);
+      await command(`git commit -m 'ci(renovate): add Renovate configuration'`);
+    }
 
     await command(`git push`);
 
