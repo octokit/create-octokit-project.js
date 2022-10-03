@@ -11,8 +11,13 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+ HEAD
+      - uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b # tagv3
+      - uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93 # tagv3
+
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+ origin/replace-master-with-main
         with:
           node-version: 16
           cache: npm
