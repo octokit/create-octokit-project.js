@@ -1,30 +1,30 @@
-const { inspect } = require("util");
-const { mkdir } = require("fs").promises;
+import { inspect } from "util";
+import { mkdir } from "fs/promises";
 
-const inquirer = require("inquirer");
-const { Octokit } = require("@octokit/core");
-const { createOAuthDeviceAuth } = require("@octokit/auth-oauth-device");
-const clipboardy = require("clipboardy");
+import inquirer from "inquirer";
+import { Octokit } from "@octokit/core";
+import { createOAuthDeviceAuth } from "@octokit/auth-oauth-device";
+import clipboardy from "clipboardy";
 
-const command = require("./lib/command");
-const createBranchProtection = require("./lib/create-branch-protection");
-const createCoc = require("./lib/create-coc");
-const createContributing = require("./lib/create-contributing");
-const createIssueTemplates = require("./lib/create-issue-templates");
-const createLicense = require("./lib/create-license");
-const createPackageJson = require("./lib/create-package-json");
-const createPullRequest = require("./lib/create-pull-request");
-const createReadme = require("./lib/create-readme");
-const createReleaseAction = require("./lib/create-release-action");
-const createUpdatePrettierAction = require("./lib/create-update-prettier-action");
-const createTestAction = require("./lib/create-test-action");
-const createRenovateConfig = require("./lib/create-renovate-config");
-const createRepository = require("./lib/create-repository");
-const inviteCollaborators = require("./lib/invite-collaborators");
-const prompts = require("./lib/prompts");
-const writePrettyFile = require("./lib/write-pretty-file");
+import command from "./lib/command";
+import createBranchProtection from "./lib/create-branch-protection";
+import createCoc from "./lib/create-coc";
+import createContributing from "./lib/create-contributing";
+import createIssueTemplates from "./lib/create-issue-templates";
+import createLicense from "./lib/create-license";
+import createPackageJson from "./lib/create-package-json";
+import createPullRequest from "./lib/create-pull-request";
+import createReadme from "./lib/create-readme";
+import createReleaseAction from "./lib/create-release-action";
+import createUpdatePrettierAction from "./lib/create-update-prettier-action";
+import createTestAction from "./lib/create-test-action";
+import createRenovateConfig from "./lib/create-renovate-config";
+import createRepository from "./lib/create-repository";
+import inviteCollaborators from "./lib/invite-collaborators";
+import prompts from "./lib/prompts";
+import writePrettyFile from "./lib/write-pretty-file";
 
-module.exports = async function main() {
+export default async function main() {
   const { repositoryType } = await inquirer.prompt([
     {
       name: "repositoryType",
@@ -480,4 +480,4 @@ $ cd ${answers.path}`);
   }
 
   console.log("All done.");
-};
+}
