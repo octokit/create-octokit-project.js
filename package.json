@@ -25,10 +25,10 @@
     "clipboardy": "^2.3.0",
     "execa": "^5.1.1",
     "inquirer": "^8.2.4",
+    "prettier": "^2.7.1",
     "spdx-license-list": "^6.3.0"
   },
   "devDependencies": {
-    "prettier": "^2.7.1",
     "semantic-release": "^19.0.0"
   },
   "release": {
