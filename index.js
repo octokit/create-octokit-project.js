@@ -24,7 +24,7 @@ const inviteCollaborators = require("./lib/invite-collaborators");
 const prompts = require("./lib/prompts");
 const writePrettyFile = require("./lib/write-pretty-file");
 
-module.exportst = async function main() {
+module.exports = async function main() {
   const { repositoryType } = await inquirer.prompt([
     {
       name: "repositoryType",
