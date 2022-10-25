@@ -6,23 +6,23 @@ import { Octokit } from "@octokit/core";
 import { createOAuthDeviceAuth } from "@octokit/auth-oauth-device";
 import clipboardy from "clipboardy";
 
-import command from "./lib/command";
-import createBranchProtection from "./lib/create-branch-protection";
-import createCoc from "./lib/create-coc";
-import createContributing from "./lib/create-contributing";
-import createIssueTemplates from "./lib/create-issue-templates";
-import createLicense from "./lib/create-license";
-import createPackageJson from "./lib/create-package-json";
-import createPullRequest from "./lib/create-pull-request";
-import createReadme from "./lib/create-readme";
-import createReleaseAction from "./lib/create-release-action";
-import createUpdatePrettierAction from "./lib/create-update-prettier-action";
-import createTestAction from "./lib/create-test-action";
-import createRenovateConfig from "./lib/create-renovate-config";
-import createRepository from "./lib/create-repository";
-import inviteCollaborators from "./lib/invite-collaborators";
-import prompts from "./lib/prompts";
-import writePrettyFile from "./lib/write-pretty-file";
+import command from "./lib/command.js";
+import createBranchProtection from "./lib/create-branch-protection.js";
+import createCoc from "./lib/create-coc.js";
+import createContributing from "./lib/create-contributing.js";
+import createIssueTemplates from "./lib/create-issue-templates.js";
+import createLicense from "./lib/create-license.js";
+import createPackageJson from "./lib/create-package-json.js";
+import createPullRequest from "./lib/create-pull-request.js";
+import createReadme from "./lib/create-readme.js";
+import createReleaseAction from "./lib/create-release-action.js";
+import createUpdatePrettierAction from "./lib/create-update-prettier-action.js";
+import createTestAction from "./lib/create-test-action.js";
+import createRenovateConfig from "./lib/create-renovate-config.js";
+import createRepository from "./lib/create-repository.js";
+import inviteCollaborators from "./lib/invite-collaborators.js";
+import prompts from "./lib/prompts.js";
+import writePrettyFile from "./lib/write-pretty-file.js";
 
 export default async function main() {
   const { repositoryType } = await inquirer.prompt([
