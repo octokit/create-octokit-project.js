@@ -457,7 +457,7 @@ module.exports = async function main() {
     await command(`git add .github/workflows/test.yml`);
     await command(`git commit -m 'ci(test): initial version'`);
 
-    await createUpdatePrettierAction();
+    await createUpdatePrettierAction({ owner });
     await command(`git add .github/workflows/update-prettier.yml`);
     await command(`git commit -m 'ci(update-prettier): initial version'`);
 
