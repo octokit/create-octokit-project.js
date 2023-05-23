@@ -10,6 +10,7 @@ const command = require("./lib/command");
 const createBranchProtection = require("./lib/create-branch-protection");
 const createCoc = require("./lib/create-coc");
 const createContributing = require("./lib/create-contributing");
+const createEsbuildScript = require("./lib/create-esbuild-script");
 const createIssueTemplates = require("./lib/create-issue-templates");
 const createLicense = require("./lib/create-license");
 const createPackageJson = require("./lib/create-package-json");
@@ -184,8 +185,8 @@ module.exports = async function main() {
     const dependencies = [];
     const devDependencies = [
       "@octokit/tsconfig",
-      "@pika/pack",
-      "@pika/plugin-ts-standard-pkg",
+      "esbuild",
+      "glob",
       "@types/jest",
       "@types/node",
       "jest",
@@ -196,12 +197,6 @@ module.exports = async function main() {
       "typescript",
     ];
 
-    if (answers.supportsBrowsers) {
-      devDependencies.push("@pika/plugin-build-web");
-    }
-    if (answers.supportsNode) {
-      devDependencies.push("@pika/plugin-build-node");
-    }
     if (answers.isPlugin || answers.isAuthenticationStrategy) {
       devDependencies.push("@octokit/core");
     }
@@ -241,10 +236,16 @@ module.exports = async function main() {
       JSON.stringify({
         extends: "@octokit/tsconfig",
         include: ["src/**/*"],
+        compilerOptions: {
+          declaration: true,
+          outDir: "pkg/dist-types",
+          emitDeclarationOnly: true,
+          sourceMap: true,
+        }
       })
     );
     await command(`git add tsconfig.json`);
-    await command(`git commit -m 'build(typescript): configuration for pika'`);
+    await command(`git commit -m 'build(typescript): configuration for esbuild'`);
 
     console.log("create smoke test");
 
@@ -418,6 +419,7 @@ module.exports = async function main() {
       }
     }
 
+    await createEsbuildScript(answers);
     await command(`git add src`);
     await command(`git commit -m 'feat: initial version'`);
 
