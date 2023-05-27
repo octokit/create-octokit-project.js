@@ -241,11 +241,13 @@ module.exports = async function main() {
           outDir: "pkg/dist-types",
           emitDeclarationOnly: true,
           sourceMap: true,
-        }
+        },
       })
     );
     await command(`git add tsconfig.json`);
-    await command(`git commit -m 'build(typescript): configuration for esbuild'`);
+    await command(
+      `git commit -m 'build(typescript): configuration for esbuild'`
+    );
 
     console.log("create smoke test");
 
