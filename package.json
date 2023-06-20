@@ -20,7 +20,7 @@
     "posttest": "npm run lint"
   },
   "dependencies": {
-    "@octokit/auth-oauth-device": "^4.0.0",
+    "@octokit/auth-oauth-device": "^5.0.0",
     "@octokit/core": "^4.0.0",
     "camelcase": "^7.0.0",
     "clipboardy": "^3.0.0",
@@ -30,7 +30,7 @@
     "spdx-license-list": "^6.3.0"
   },
   "devDependencies": {
-    "semantic-release": "^19.0.0"
+    "semantic-release": "^21.0.0"
   },
   "release": {
     "branches": [
@@ -38,6 +38,6 @@
     ]
   },
   "engines": {
-    "node": ">= 14"
+    "node": ">= 18"
   }
 }

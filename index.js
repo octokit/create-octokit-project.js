@@ -10,6 +10,7 @@ import command from "./lib/command.js";
 import createBranchProtection from "./lib/create-branch-protection.js";
 import createCoc from "./lib/create-coc.js";
 import createContributing from "./lib/create-contributing.js";
+import createEsbuildScript from "./lib/create-esbuild-script.js";
 import createIssueTemplates from "./lib/create-issue-templates.js";
 import createLicense from "./lib/create-license.js";
 import createPackageJson from "./lib/create-package-json.js";
@@ -184,8 +185,8 @@ export default async function main() {
     const dependencies = [];
     const devDependencies = [
       "@octokit/tsconfig",
-      "@pika/pack",
-      "@pika/plugin-ts-standard-pkg",
+      "esbuild",
+      "glob",
       "@types/jest",
       "@types/node",
       "jest",
@@ -196,12 +197,6 @@ export default async function main() {
       "typescript",
     ];
 
-    if (answers.supportsBrowsers) {
-      devDependencies.push("@pika/plugin-build-web");
-    }
-    if (answers.supportsNode) {
-      devDependencies.push("@pika/plugin-build-node");
-    }
     if (answers.isPlugin || answers.isAuthenticationStrategy) {
       devDependencies.push("@octokit/core");
     }
@@ -241,10 +236,18 @@ export default async function main() {
       JSON.stringify({
         extends: "@octokit/tsconfig",
         include: ["src/**/*"],
+        compilerOptions: {
+          declaration: true,
+          outDir: "pkg/dist-types",
+          emitDeclarationOnly: true,
+          sourceMap: true,
+        },
       })
     );
     await command(`git add tsconfig.json`);
-    await command(`git commit -m 'build(typescript): configuration for pika'`);
+    await command(
+      `git commit -m 'build(typescript): configuration for esbuild'`
+    );
 
     console.log("create smoke test");
 
@@ -418,6 +421,7 @@ export default async function main() {
       }
     }
 
+    await createEsbuildScript(answers);
     await command(`git add src`);
     await command(`git commit -m 'feat: initial version'`);
 
@@ -457,7 +461,7 @@ export default async function main() {
     await command(`git add .github/workflows/test.yml`);
     await command(`git commit -m 'ci(test): initial version'`);
 
-    await createUpdatePrettierAction();
+    await createUpdatePrettierAction({ owner });
     await command(`git add .github/workflows/update-prettier.yml`);
     await command(`git commit -m 'ci(update-prettier): initial version'`);
 
