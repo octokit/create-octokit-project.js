@@ -22,10 +22,10 @@
   "dependencies": {
     "@octokit/auth-oauth-device": "^5.0.0",
     "@octokit/core": "^4.0.0",
-    "camelcase": "^7.0.0",
+    "camelcase": "^7.0.1",
     "clipboardy": "^3.0.0",
-    "execa": "^6.1.0",
-    "inquirer": "^9.1.4",
+    "execa": "^7.1.1",
+    "inquirer": "^9.2.7",
     "prettier": "^2.7.1",
     "spdx-license-list": "^6.3.0"
   },
