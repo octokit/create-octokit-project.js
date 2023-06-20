@@ -1,31 +1,31 @@
-import { inspect } from "util";
-import { mkdir } from "fs/promises";
+import { inspect } from "node:util";
+import { mkdir } from "node:fs/promises";
 
 import inquirer from "inquirer";
 import { Octokit } from "@octokit/core";
 import { createOAuthDeviceAuth } from "@octokit/auth-oauth-device";
 import clipboardy from "clipboardy";
 
-import command from "./lib/command.js";
-import createBranchProtection from "./lib/create-branch-protection.js";
-import createCoc from "./lib/create-coc.js";
-import createContributing from "./lib/create-contributing.js";
-import createEsbuildScript from "./lib/create-esbuild-script.js";
-import createIssueTemplates from "./lib/create-issue-templates.js";
-import createLicense from "./lib/create-license.js";
-import createPackageJson from "./lib/create-package-json.js";
-import createPullRequest from "./lib/create-pull-request.js";
-import createReadme from "./lib/create-readme.js";
-import createReleaseAction from "./lib/create-release-action.js";
-import createUpdatePrettierAction from "./lib/create-update-prettier-action.js";
-import createTestAction from "./lib/create-test-action.js";
-import createRenovateConfig from "./lib/create-renovate-config.js";
-import createRepository from "./lib/create-repository.js";
-import inviteCollaborators from "./lib/invite-collaborators.js";
-import prompts from "./lib/prompts.js";
-import writePrettyFile from "./lib/write-pretty-file.js";
+import { command } from "./lib/command.js";
+import { createBranchProtection } from "./lib/create-branch-protection.js";
+import { createCoc } from "./lib/create-coc.js";
+import { createContributing } from "./lib/create-contributing.js";
+import { createEsbuildScript } from "./lib/create-esbuild-script.js";
+import { createIssueTemplates } from "./lib/create-issue-templates.js";
+import { createLicense } from "./lib/create-license.js";
+import { createPackageJson } from "./lib/create-package-json.js";
+import { createPullRequest } from "./lib/create-pull-request.js";
+import { createReadme } from "./lib/create-readme.js";
+import { createReleaseAction } from "./lib/create-release-action.js";
+import { createUpdatePrettierAction } from "./lib/create-update-prettier-action.js";
+import { createTestAction } from "./lib/create-test-action.js";
+import { createRenovateConfig } from "./lib/create-renovate-config.js";
+import { createRepository } from "./lib/create-repository.js";
+import { inviteCollaborators } from "./lib/invite-collaborators.js";
+import { prompts } from "./lib/prompts.js";
+import { writePrettyFile } from "./lib/write-pretty-file.js";
 
-export default async function main() {
+export async function main() {
   const { repositoryType } = await inquirer.prompt([
     {
       name: "repositoryType",
