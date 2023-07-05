@@ -137,7 +137,7 @@ export async function main() {
 
     await command("git add CODE_OF_CONDUCT.md");
     await command(
-      "git commit -m 'docs(CODE_OF_CONDUCT): Contributor Covenant'"
+      "git commit -m 'docs(CODE_OF_CONDUCT): Contributor Covenant'",
     );
 
     await command("git add CONTRIBUTING.md");
@@ -160,7 +160,7 @@ export async function main() {
     });
 
     await command(
-      `git remote add origin git@github.com:${answers.repository}.git`
+      `git remote add origin git@github.com:${answers.repository}.git`,
     );
     await command(`git push -u origin HEAD`);
     await command(`git checkout -b initial-version`);
@@ -224,11 +224,11 @@ export async function main() {
 
     await writePrettyFile(
       ".gitignore",
-      ["coverage/", "node_modules/", "pkg/"].join("\n")
+      ["coverage/", "node_modules/", "pkg/"].join("\n"),
     );
     await command(`git add .gitignore`);
     await command(
-      `git commit -m 'build(gitignore): coverage, node_modules, pkg'`
+      `git commit -m 'build(gitignore): coverage, node_modules, pkg'`,
     );
 
     writePrettyFile(
@@ -242,11 +242,11 @@ export async function main() {
           emitDeclarationOnly: true,
           sourceMap: true,
         },
-      })
+      }),
     );
     await command(`git add tsconfig.json`);
     await command(
-      `git commit -m 'build(typescript): configuration for esbuild'`
+      `git commit -m 'build(typescript): configuration for esbuild'`,
     );
 
     console.log("create smoke test");
@@ -275,7 +275,7 @@ export async function main() {
               }).not.toThrow();
             });
           });
-        `
+        `,
       );
     } else {
       await writePrettyFile(
@@ -292,7 +292,7 @@ export async function main() {
               expect(${answers.exportName}.VERSION).toEqual("0.0.0-development");
             });
           });
-        `
+        `,
       );
     }
 
@@ -302,7 +302,7 @@ export async function main() {
     console.log("create src");
     await writePrettyFile(
       "src/version.ts",
-      'export const VERSION = "0.0.0-development"'
+      'export const VERSION = "0.0.0-development"',
     );
 
     if (answers.isPlugin) {
@@ -320,7 +320,7 @@ export async function main() {
            */
           export function ${answers.exportName}(octokit: Octokit, options: Options) {}
           ${answers.exportName}.VERSION = VERSION;
-        `
+        `,
       );
     } else if (answers.isAuthenticationStrategy) {
       await writePrettyFile(
@@ -345,7 +345,7 @@ export async function main() {
             });
           };
           
-        `
+        `,
       );
       await writePrettyFile(
         "src/types.ts",
@@ -355,7 +355,7 @@ export async function main() {
             AuthOptions: any;
             Authentication: any;
           }; 
-        `
+        `,
       );
       await writePrettyFile(
         "src/auth.ts",
@@ -365,7 +365,7 @@ export async function main() {
           export async function auth(options: AuthOptions): Promise<Authentication> {
             // TODO: add implementation
           }        
-        `
+        `,
       );
       await writePrettyFile(
         "src/hook.ts",
@@ -392,7 +392,7 @@ export async function main() {
             //       probably something like setting the authorization header
             return request(route, parameters);
           }
-        `
+        `,
       );
     } else {
       const isClass = /^[A-Z]/.test(answers.exportName);
@@ -406,7 +406,7 @@ export async function main() {
             export class ${answers.exportName} {
               static VERSION = VERSION
             }
-          `
+          `,
         );
       } else {
         await writePrettyFile(
@@ -416,7 +416,7 @@ export async function main() {
 
             export function ${answers.exportName}() {}
             ${answers.exportName}.VERSION = VERSION
-          `
+          `,
         );
       }
     }
