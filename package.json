@@ -20,8 +20,8 @@
     "posttest": "npm run lint"
   },
   "dependencies": {
-    "@octokit/auth-oauth-device": "^5.0.0",
-    "@octokit/core": "^4.0.0",
+    "@octokit/auth-oauth-device": "^6.0.0",
+    "@octokit/core": "^5.0.0",
     "camelcase": "^7.0.1",
     "clipboardy": "^3.0.0",
     "execa": "^7.1.1",
