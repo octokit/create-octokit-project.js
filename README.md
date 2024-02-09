@@ -1,6 +1,6 @@
 # Create new Octokit JS project
 
-> "npm init" script to create a new folder and repository for an Octokit JavaScript project
+> "[npm init](https://docs.npmjs.com/cli/v7/commands/npm-init)" script to create a new folder and repository for an Octokit JavaScript module (plugin, authentication strategy, or otherwise)
 
 ## Usage
 
@@ -21,10 +21,8 @@ npm init octokit-project
 - Creates `.gitignore`, `tsconfig.json`
 - Creates `test/smoke.test.ts`
 - Creates actions for tests and automated releases
-- Creates a pull request
-- Adds repository collaborators
+- Creates a pull request with further instructions
 - Adds branch protection
-- Adds workflow files for tests and automated releases
 
 ## Contribute
 
