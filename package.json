@@ -24,7 +24,7 @@
     "@octokit/core": "^6.0.1",
     "camelcase": "^8.0.0",
     "clipboardy": "^4.0.0",
-    "execa": "^8.0.0",
+    "execa": "^9.0.0",
     "inquirer": "^9.2.7",
     "prettier": "^3.0.0",
     "spdx-license-list": "^6.3.0"
