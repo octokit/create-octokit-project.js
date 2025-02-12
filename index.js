@@ -188,6 +188,7 @@ export async function main() {
       "@vitest/coverage-v8",
       "esbuild",
       "glob",
+      "@types/node",
       "prettier",
       "semantic-release",
       "semantic-release-plugin-update-version-in-files",
