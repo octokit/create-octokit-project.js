@@ -185,16 +185,15 @@ export async function main() {
     const dependencies = [];
     const devDependencies = [
       "@octokit/tsconfig",
+      "@vitest/coverage-v8",
       "esbuild",
       "glob",
-      "@types/jest",
       "@types/node",
-      "jest",
       "prettier",
       "semantic-release",
       "semantic-release-plugin-update-version-in-files",
-      "ts-jest",
       "typescript",
+      "vitest",
     ];
 
     if (answers.isPlugin || answers.isAuthenticationStrategy) {
